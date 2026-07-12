@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
   desktop_webview_window
   flutter_secure_storage_linux
   url_launcher_linux
@@ -11,6 +12,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   jni
+=======
+)
+
+list(APPEND FLUTTER_FFI_PLUGIN_LIST
+>>>>>>> 48f003287d8ba6f1d8f0b7029d387737e470a8c7
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

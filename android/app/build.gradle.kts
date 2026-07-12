@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -9,6 +10,8 @@ val env = Properties().apply {
     }
 }
 
+=======
+>>>>>>> 48f003287d8ba6f1d8f0b7029d387737e470a8c7
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -39,6 +42,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+<<<<<<< HEAD
 
         // .env에서 값을 꺼내와 매니페스트 변수로 등록합니다.
         manifestPlaceholders["naverClientId"] = env.getProperty("NAVER_CLIENT_ID") ?: ""
@@ -48,6 +52,8 @@ android {
         // 💡 카카오 스키마도 숨기고 싶다면 여기에 함께 추가 가능합니다!
         val kakaoKey = env.getProperty("KAKAO_NATIVE_APP_KEY") ?: ""
         manifestPlaceholders["kakaoScheme"] = "kakao$kakaoKey"
+=======
+>>>>>>> 48f003287d8ba6f1d8f0b7029d387737e470a8c7
     }
 
     buildTypes {
