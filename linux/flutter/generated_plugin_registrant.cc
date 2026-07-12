@@ -6,7 +6,6 @@
 
 #include "generated_plugin_registrant.h"
 
-<<<<<<< HEAD
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
 #include <flutter_secure_storage_linux/flutter_secure_storage_linux_plugin.h>
 #include <url_launcher_linux/url_launcher_plugin.h>
@@ -25,8 +24,4 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) window_to_front_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "WindowToFrontPlugin");
   window_to_front_plugin_register_with_registrar(window_to_front_registrar);
-=======
-
-void fl_register_plugins(FlPluginRegistry* registry) {
->>>>>>> 48f003287d8ba6f1d8f0b7029d387737e470a8c7
 }

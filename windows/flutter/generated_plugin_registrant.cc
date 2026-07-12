@@ -6,7 +6,6 @@
 
 #include "generated_plugin_registrant.h"
 
-<<<<<<< HEAD
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
 #include <flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.h>
 #include <url_launcher_windows/url_launcher_windows.h>
@@ -21,8 +20,4 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
   WindowToFrontPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("WindowToFrontPlugin"));
-=======
-
-void RegisterPlugins(flutter::PluginRegistry* registry) {
->>>>>>> 48f003287d8ba6f1d8f0b7029d387737e470a8c7
 }
