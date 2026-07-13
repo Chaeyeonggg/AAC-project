@@ -6,6 +6,8 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'core/theme/app_theme.dart';
+import 'features/home/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +22,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SimpleLoginScreen(), // 로그인 화면으로 연결
+    return MaterialApp(
+      theme: AppTheme.lightTheme,
+      home: OnboardingScreen(), // 로그인 화면으로 연결
     );
   }
 }
