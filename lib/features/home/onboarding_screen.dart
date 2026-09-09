@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../auth/screens/login_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -58,7 +59,11 @@ class OnboardingScreen extends StatelessWidget {
                   height: 64, // 피그마 내부 패딩을 감안한 최적의 버튼 높이 확보
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: 시작하기 버튼 클릭 시 로그인(SimpleLoginScreen)으로 이동 로직 구현
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD95E2A), // 디자인 원본 포인트 컬러

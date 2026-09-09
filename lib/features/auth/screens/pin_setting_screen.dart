@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../main/main_screens/main1_screen.dart';
 
 class PinSettingScreen extends StatefulWidget {
   const PinSettingScreen({super.key});
@@ -30,28 +32,41 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
     }
   }
 
+  // 하단 버튼 클릭 시 처리 (완료 여부에 따라 동작이 갈림)
+  void _onBottomButtonPressed() {
+    if (_pin.length == 4) {
+      // TODO: PIN 저장 및 다음 화면 이동 로직 구현
+      print("보호자 PIN 설정 최종 완료: $_pin");
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const Main1Screen()));
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 4자리 입력이 완료되었는지 여부 확인
     final bool isPinComplete = _pin.length == 4;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFAF0E7),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
 
-              // 1. 상단 자물쇠 이미지 영역 (lock.png 활용)
+              // 1. 상단 자물쇠 이미지 영역
               Image.asset(
                 'assets/images/lock.png',
                 width: 89.66,
                 height: 72.0,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               // 2. 타이틀 및 가이드 텍스트
               Text(
@@ -71,7 +86,7 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
               ),
               const SizedBox(height: 40),
 
-              // 3. 네모 칸 내부 동그라미 인디케이터 (요청 사항 반영 🛠️)
+              // 3. 네모 칸 내부 동그라미 인디케이터
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (index) {
@@ -81,18 +96,16 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      // 번호가 입력되면 네모 박스 자체가 주황색 포인트 컬러로 변환
                       color: isInputted
                           ? const Color(0xFFD95E2A)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: const Color(0xFFE7D5BF),
-                        width: 1,
+                        width: 2,
                       ),
                     ),
                     alignment: Alignment.center,
-                    // 입력 시 내부에 흰색 동그라미 표출
                     child: isInputted
                         ? const Icon(
                             Icons.circle,
@@ -103,16 +116,15 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
                   );
                 }),
               ),
+              const SizedBox(height: 40),
 
-              const Spacer(),
-
-              // 4. 3x4 숫자 가상 키패드 영역 (GridView 압축)
+              // 4. 3x4 숫자 가상 키패드 영역
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 1.3,
+                  childAspectRatio: 1.17,
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                 ),
@@ -156,8 +168,8 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
                           icon ??
                           Text(
                             label,
-                            style: TextStyle(
-                              color: const Color(0xFF2B1A0D),
+                            style: const TextStyle(
+                              color: Color(0xFF2B1A0D),
                               fontSize: 30,
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w800,
@@ -167,41 +179,16 @@ class _PinSettingScreenState extends State<PinSettingScreen> {
                   );
                 },
               ),
+              const SizedBox(height: 24),
 
-              const Spacer(),
-
-              // 5. 조건부 하단 다이내믹 버튼 (완료 여부에 따른 전환 처리 🛠️)
-              SizedBox(
-                width: double.infinity,
-                height: 64,
-                child: ElevatedButton(
-                  onPressed: isPinComplete
-                      ? () {
-                          // TODO: PIN 저장 및 메인 홈 화면 진입점 라우팅 처리
-                          print("보호자 PIN 설정 최종 완료: $_pin");
-                        }
-                      : null, // 4자리가 안 되면 비활성화
-                  style: ElevatedButton.styleFrom(
-                    // 4자리 입력 시 지정하신 주황색(0xFFD95E2A), 미완료 시 회색 계열(0xFFE7DFD8)
-                    backgroundColor: isPinComplete
-                        ? const Color(0xFFD95E2A)
-                        : const Color(0xFFE7DFD8),
-                    disabledBackgroundColor: const Color(0xFFE7DFD8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    isPinComplete ? '✅ 설정 완료' : '다음 → PIN 설정',
-                    style: AppTypography.navButton.copyWith(
-                      color: isPinComplete
-                          ? Colors.white
-                          : const Color(0xFF2B1A0D),
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
+              // 5. 조건부 하단 버튼 ("← 이전" ↔ "✅ 설정 완료")
+              AppButton(
+                text: isPinComplete ? '✅ 설정 완료' : '← 이전',
+                onPressed: _onBottomButtonPressed,
+                backgroundColor: isPinComplete
+                    ? const Color(0xFFD95E2A)
+                    : const Color(0xFFE7DFD8),
+                textColor: isPinComplete ? Colors.white : AppColors.DarkText,
               ),
             ],
           ),
