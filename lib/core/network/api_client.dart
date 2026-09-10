@@ -3,10 +3,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiClient {
   static String get baseUrl {
+    // 안드로이드 에뮬레이터의 경우
+    // try {
+    //   return dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:3000';
+    // } catch (_) {
+    //   return 'http://10.0.2.2:3000';
+    // }
+
+    // 실제 폰의 경우
     try {
-      return dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:3000';
+      return dotenv.env['BASE_URL'] ?? 'http://172.17.74.35:3000';
     } catch (_) {
-      return 'http://10.0.2.2:3000';
+      return 'http://172.17.74.35:3000';
     }
   }
 
@@ -18,8 +26,8 @@ class ApiClient {
     return Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 5),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
       ),
     );
   }

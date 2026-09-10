@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../core/api_client.dart';
-import '../../core/secure_storage.dart';
+import '../../core/network/api_client.dart';
+import '../../core/network/secure_storage.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'dart:developer' as developer;

@@ -1,7 +1,7 @@
 // 전체 코드
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'features/auth/simple_login_screen.dart';
+import 'features/auth/screens/simple_login_screen.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter/foundation.dart';

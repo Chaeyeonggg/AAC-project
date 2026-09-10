@@ -1,27 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'auth_provider.dart';
+import 'package:flutter/foundation.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
+import '../auth_provider.dart';
+import 'user_registration_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   // 입력값을 제어하기 위한 컨트롤러 등록
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _showError(Object e) {
+    setState(() => _errorMessage = e.toString());
+  }
+
+  void _onSuccess() {
+    // 토스트 메시지 출력
+    Fluttertoast.showToast(
+      msg: "로그인 성공!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const UserRegistrationScreen()),
+    );
+  }
+
+  Future<void> _loginWithKakao() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      await authRepo.loginWithKakao();
+      _onSuccess();
+    } catch (e) {
+      _showError(e);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loginWithNaver() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      await authRepo.loginWithNaver();
+      _onSuccess();
+    } catch (e) {
+      _showError(e);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loginWithEmail() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      await authRepo.login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      _onSuccess();
+    } catch (e) {
+      _showError(e);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -64,9 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 64,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: 카카오 로그인 레포지토리 연동
-                  },
+                  onPressed: _isLoading ? null : _loginWithKakao,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.Kakao,
                     shape: RoundedRectangleBorder(
@@ -101,9 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 64,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: 네이버 로그인 레포지토리 연동
-                  },
+                  onPressed: _isLoading ? null : _loginWithNaver,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.Naver,
                     shape: RoundedRectangleBorder(
@@ -192,6 +265,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true, // 비밀번호 가리기
                       decoration: _buildInputDecoration('비밀번호'),
                     ),
+                    if (_errorMessage != null) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red, fontSize: 14),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -203,7 +283,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 64,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: 이메일 로그인 요청 로직 구현
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const UserRegistrationScreen(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD95E2A),
@@ -212,10 +296,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
-                    '이메일로 시작 →',
-                    style: AppTypography.navButton.copyWith(fontSize: 24),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Text(
+                          '이메일로 시작 →',
+                          style: AppTypography.navButton.copyWith(fontSize: 24),
+                        ),
                 ),
               ),
               const SizedBox(height: 16),

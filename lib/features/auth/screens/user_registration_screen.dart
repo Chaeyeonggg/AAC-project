@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
+import 'pin_setting_screen.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({super.key});
@@ -159,7 +160,11 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                 height: 64,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: 입력값 검증 후 다음 PIN 번호 설정 화면으로 이동 로직
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PinSettingScreen(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD95E2A),
