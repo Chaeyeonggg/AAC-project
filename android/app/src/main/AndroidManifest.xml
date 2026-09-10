@@ -41,14 +41,6 @@
 
         </activity>
 
-        <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- FlutterWebAuth2의 callbackUrlScheme 값과 동일하게 설정 -->
-                <data android:scheme="http://172.17.74.35:3000/auth/naver/callback" />
-        </intent-filter>
-
         <meta-data
             android:name="com.naver.sdk.clientId"
             android:value="${naverClientId}" />

@@ -1,114 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../../core/services/cart_controller.dart';
+import '../../../shared/widgets/option_card.dart';
+import '../../../shared/widgets/action_buttons.dart';
 import '../../../shared/widgets/app_header.dart';
-import '../../../shared/widgets/app_button.dart';
-import '../providers/cart_provider.dart';
-import 'order_summary_screen.dart';
+import '../../../shared/widgets/order_summary_bar.dart';
+import 'order_confirm_screen.dart';
 
-enum PaymentMethod { card, cash, easyPay }
+class PaymentMethodScreen extends StatefulWidget {
+  final CartController cart;
+  final String diningType;
 
-class PaymentMethodScreen extends ConsumerStatefulWidget {
-  final String storeName;
-
-  const PaymentMethodScreen({super.key, required this.storeName});
+  const PaymentMethodScreen({
+    super.key,
+    required this.cart,
+    required this.diningType,
+  });
 
   @override
-  ConsumerState<PaymentMethodScreen> createState() =>
-      _PaymentMethodScreenState();
+  State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
 }
 
-class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
-  PaymentMethod? _selected;
+class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
+  String? _selected; // 'card' | 'cash' | 'easypay'
 
-  void _onConfirm() {
+  void _onSelect(String key) {
+    setState(() => _selected = key);
+  }
+
+  void _onNext() {
     if (_selected == null) return;
-    final cart = ref.read(cartProvider);
-
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => OrderSummaryScreen(
-          storeName: widget.storeName,
-          cartItems: cart,
+        builder: (context) => OrderConfirmScreen(
+          cart: widget.cart,
+          diningType: widget.diningType,
           paymentMethod: _selected!,
         ),
       ),
     );
   }
 
-  String _label(PaymentMethod method) {
-    switch (method) {
-      case PaymentMethod.card:
-        return '카드 결제';
-      case PaymentMethod.cash:
-        return '현금 결제';
-      case PaymentMethod.easyPay:
-        return '간편 결제';
-    }
+  void _onBack() {
+    Navigator.of(context).maybePop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool canProceed = _selected != null;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAF0E7),
       body: SafeArea(
         child: Column(
           children: [
             AppHeader(onMenuPressed: () {}),
+            OrderSummaryBar(cart: widget.cart),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '결제 방식을 선택해주세요',
-                      style: TextStyle(
-                        color: AppColors.DarkText,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ...PaymentMethod.values.map((method) {
-                      final isSelected = _selected == method;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: InkWell(
-                          onTap: () => setState(() => _selected = method),
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFD95E2A)
-                                    : const Color(0xFFE7D5BF),
-                                width: isSelected ? 2 : 1,
-                              ),
-                            ),
-                            child: Text(
-                              _label(method),
-                              style: const TextStyle(fontSize: 18),
-                            ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 32),
+                      child: Center(
+                        child: Text(
+                          '결제는 어떻게?',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF2B1A0D),
+                            fontSize: 36,
+                            fontWeight: FontWeight.w800,
+                            height: 1.11,
                           ),
                         ),
-                      );
-                    }),
+                      ),
+                    ),
+                    OptionCard(
+                      emoji: '💳',
+                      label: '카드',
+                      selected: _selected == 'card',
+                      onTap: () => _onSelect('card'),
+                    ),
+                    const SizedBox(height: 16),
+                    OptionCard(
+                      emoji: '💵',
+                      label: '현금',
+                      selected: _selected == 'cash',
+                      onTap: () => _onSelect('cash'),
+                    ),
+                    const SizedBox(height: 16),
+                    OptionCard(
+                      emoji: '📱',
+                      label: '간편결제',
+                      selected: _selected == 'easypay',
+                      onTap: () => _onSelect('easypay'),
+                    ),
                   ],
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
-              child: AppButton(
-                text: '주문 확인하기',
-                onPressed: _selected == null ? null : _onConfirm,
-                backgroundColor: const Color(0xFFD95E2A),
-                textColor: Colors.white,
-                disabledBackgroundColor: const Color(0xFFE7DFD8),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+              child: Column(
+                children: [
+                  PrimaryActionButton(
+                    label: '다음 → 주문 완료',
+                    enabled: canProceed,
+                    onTap: _onNext,
+                  ),
+                  const SizedBox(height: 12),
+                  SecondaryActionButton(label: '← 이전', onTap: _onBack),
+                ],
               ),
             ),
           ],

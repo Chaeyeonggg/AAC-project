@@ -12,9 +12,9 @@ class ApiClient {
 
     // 실제 폰의 경우
     try {
-      return dotenv.env['BASE_URL'] ?? 'http://172.17.74.35:3000';
+      return dotenv.env['BASE_URL'] ?? 'http://172.30.1.29:3000';
     } catch (_) {
-      return 'http://172.17.74.35:3000';
+      return 'http://172.30.1.29:3000';
     }
   }
 
