@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
-import '../auth/screens/login_screen.dart';
+import 'package:aac/core/theme/app_colors.dart';
+import 'package:aac/features/auth/screens/login_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -9,80 +8,121 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.Primary,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(),
-
-              // 1. 말풍선 이미지 영역 (이모지 💬 대신 png 자산 사용)
-              Center(
-                child: Image.asset(
-                  'assets/images/speech_bubble.png',
-                  width: 112.0,
-                  height: 90.0,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 40),
-
-              // 2. 앱 타이틀 (PageTitle 규격 적용)
-              Text(
-                '말그림 위치톡',
-                textAlign: TextAlign.center,
-                style: AppTypography.pageTitle.copyWith(
-                  color: AppColors.DarkText, // #2B1A0D와 가장 유사한 테마 색상 매핑
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 3. 앱 설명 서브 텍스트 영역 (Description 규격 및 정렬 조정)
-              Text(
-                '장소 기반 맞춤형 AAC\n어디서든 자연스러운 의사소통',
-                textAlign: TextAlign.center,
-                style: AppTypography.description.copyWith(
-                  color: AppColors.SubText, // #8B6A4F와 유사한 서브 텍스트 색상 매핑
-                  height: 1.6,
-                ),
-              ),
-
-              const Spacer(),
-
-              // 4. 시작하기 하단 버튼 (NavButton 규격 적용)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: SizedBox(
-                  width: double.infinity, // 화면 가로를 꽉 채우되 padding 32 준수
-                  height: 64, // 피그마 내부 패딩을 감안한 최적의 버튼 높이 확보
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD95E2A), // 디자인 원본 포인트 컬러
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // 로고 영역 (원형)
+                  Container(
+                    width: 160,
+                    height: 160,
+                    decoration: const BoxDecoration(
+                      color: AppColors.PrimaryDark,
+                      shape: BoxShape.circle,
                     ),
-                    child: Text(
-                      '시작하기 →',
-                      style: AppTypography.navButton.copyWith(
-                        color: Colors.white,
-                        fontSize: 24, // 버튼 텍스트 디자인 반영
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/speech_bubble.png',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                        excludeFromSemantics: true,
                       ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 40),
+
+                  // 앱 이름
+                  const Text(
+                    '말그림 위치톡',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.TextTitle,
+                      fontSize: 38,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w800,
+                      height: 1.5,
+                      letterSpacing: -0.95,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 부제
+                  const Text(
+                    '어디서든 그림으로 말해요',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.TextSub,
+                      fontSize: 20,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 28.7),
+
+                  // 시작하기 버튼
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 375),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 85,
+                      child: Material(
+                        color: AppColors.PrimaryDark,
+                        shape: const StadiumBorder(),
+                        child: InkWell(
+                          customBorder: const StadiumBorder(),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '시작하기',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppColors.White,
+                                    fontSize: 27,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(width: 12),
+                                Text(
+                                  '→',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppColors.White,
+                                    fontSize: 32,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w800,
+                                    height: -0.4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
